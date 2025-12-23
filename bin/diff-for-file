@@ -1,0 +1,4 @@
+#!/bin/bash
+
+REF=${REF-$(get_main_upstream)}
+echo $@ | xargs git diff $REF --color

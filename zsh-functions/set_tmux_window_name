@@ -1,0 +1,44 @@
+#!/bin/bash
+
+local winidx
+
+function set_tmux_window_name() {
+  if [[ ! -n "$TMUX" ]]; then
+    return
+  fi
+
+  local dir
+  local git_root
+
+  # Try to get the git root
+  git_root=$(git rev-parse --show-toplevel 2> /dev/null)
+
+  if [[ -n "$git_root" ]]; then
+    # We're in a git repository
+    dir=$(basename "$git_root")
+  else
+    # We're not in a git repository, use current directory
+    dir=$(basename "$PWD")
+  fi
+
+  # Check if we're in ~/Code/vercel/[dirname]
+  if [[ "$PWD" == "$HOME/Code/vercel/"* ]]; then
+    dir="▲/$dir"
+  fi
+
+  tmux rename-window -t "$winidx" "$dir"
+}
+
+if [[ -n "$TMUX" ]]; then
+  winidx=$(tmux display-message -t "$TMUX_PANE" -p '#I')
+  precmd_functions+=(set_tmux_window_name)
+fi
+
+  # If we're running this script directly, set the window name to the current directory
+if [[ "$0" == *"/set_tmux_window_name" ]]; then
+  if [[ -n "$TMUX" ]]; then
+    cd "$(tmux display -p "#{pane_current_path}")"
+  fi
+
+  set_tmux_window_name
+fi

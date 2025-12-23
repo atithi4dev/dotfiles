@@ -1,0 +1,14 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: ./setup
+      env:
+        skip_orbstack: "true"
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v1

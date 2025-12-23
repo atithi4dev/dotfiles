@@ -1,0 +1,75 @@
+# This is Git's per-user configuration file.
+[core]
+# Please adapt and uncomment the following lines:
+  user = Gal Schlezinger
+  email = galstar@spitfire.co.il
+  editor = nvim
+  pager = delta --tabs=4 # --side-by-side
+
+[user]
+  name = Gal Schlezinger
+  email = gal@spitfire.co.il
+
+[alias]
+  automerge = !enable-automerge
+  m = !git co $(get_main_branch)
+  ac = add . && commit
+  co = checkout
+  ffm = merge --ff-only
+  poh = push --set-upstream origin head
+  puh = push upstream head
+  dc = diff --cached
+  bdbd = !git branch --merged | egrep -v \"(^\\*|master|dev)\" | xargs git branch -d
+  pick = !git log -300 --oneline --color $1 | fzf -m --ansi --preview 'git show --color {1}' | awk '{print $1}'
+  sw = !show_branches | fzf --ansi --header='checkout branch' --reverse | awk '{print $1}' | xargs git checkout
+  c = commit -m
+  conflicted = diff --name-only --diff-filter=U
+  web = !gh repo view --web
+  fo = fetch -p origin
+  fu = fetch -p upstream
+  pff = pull --ff-only
+  pr = !gh pr create -a Schniz
+  bpr = !gh pr view --web
+  cis = !gh pr checks
+  pco = !gh pr checkout
+  pr-bug = !hub pull-request -a Schniz -l bug
+  issue = !hub issue create
+  mr = !lab merge-request
+  dno = !git diff $(get_main_branch) --name-only
+  # set a symbolic link to the main branch
+  symbolic-main = symbolic-ref refs/heads/main
+
+[help]
+  autocorrect = 10
+
+[gpg]
+  program = /usr/local/bin/gpg
+
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+
+[push]
+  default = current
+
+; [commit]
+;   gpgsign = true
+
+[protocol]
+	version = 2
+
+[init]
+	defaultBranch = main
+
+; [include]
+;   path = ~/.gitconfig.local
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[rerere]
+	enabled = true

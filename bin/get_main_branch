@@ -1,0 +1,3 @@
+#!/bin/sh
+
+get_main_upstream | rg '^.+/([^/]+)$' -r '$1'

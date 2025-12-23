@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl -fsSL "$(pnpm get registry)$1/latest" | jq -r .version

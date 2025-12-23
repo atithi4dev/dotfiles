@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+const cp = require("child_process");
+const path = require("path");
+
+main();
+
+function getRef() {
+  if (!process.argv[2]) {
+    return cp
+      .execSync("get_main_upstream", { encoding: "utf8" })
+      .trim();
+  }
+
+  return process.argv[2];
+}
+
+function getTopLevel() {
+  return cp
+    .execSync(`git rev-parse --show-toplevel`, { encoding: "utf8" })
+    .trim();
+}
+
+function main() {
+  const ref = getRef();
+  const topLevel = getTopLevel();
+  const cwd = process.cwd();
+  const lines = cp
+    .execSync(`git diff --name-only ${ref}`, { encoding: "utf8" })
+    .split("\n")
+    .filter(Boolean);
+  for (let line of lines) {
+    line = `${topLevel}/${line}`;
+    line = path.relative(cwd, line);
+
+    console.log(line);
+  }
+}
